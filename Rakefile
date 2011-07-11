@@ -17,11 +17,10 @@ Jeweler::Tasks.new do |gem|
   gem.name = "every"
   gem.homepage = "http://github.com/jlindsey/every"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Run a command at a set interval.}
+  gem.description = %Q{Run a command at a set interval, using natural language inputs.}
   gem.email = "joshua.s.lindsey@gmail.com"
   gem.authors = ["Josh Lindsey"]
-  # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
 
@@ -38,12 +37,3 @@ end
 
 task :default => :spec
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "every #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
