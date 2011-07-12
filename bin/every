@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+raise "Requires your OS to support forking" unless Process.respond_to? :fork
+require 'chronic'
+require 'open3'
+
+
+# Validate and parse input
+index = ARGV.index { |arg| arg[-1] == ':' }
+raise "Parse error" if index.nil?
+
+time_str = ARGV[0..index].map { |arg| arg.sub ':', '' }.push("from", "now").join(' ').strip
+command_str = ARGV[index+1..-1].join(' ').strip
+
+raise "Parse error" if command_str.nil? or command_str.empty?
+
+# Fork and process
+if pid = fork
+  # Parent
+  Process.detach pid
+  exit 0
+else
+  $0 = "[every #{time_str.split(' ')[0..-3].join(' ')}] #{command_str}"
+
+  include Open3
+
+  # Child
+  loop do
+    next_run = Chronic.parse time_str
+    sleep 1 until Time.now >= next_run
+
+    popen3 command_str do |stdin, stdout, stderr, wait_thread|
+      status = wait_thread.value
+
+      unless status.to_i == 0
+        exit status.to_i
+      end
+    end
+  end
+end
+
